@@ -97,8 +97,8 @@ int search(vector<int> &v, int idx, int value) {
 
 void print_frame(vector<int> &frames, int page) {
 	
-	cout << setfill(' ') << setw(2) << page << " : ";
-	for ( int i = frames.size() - 1; i >= 0; --i ) {
+	cout <<page << " : ";
+	for ( int i = 0; i < frames.size(); i++ ) {
 		if (frames[i] == INT_MAX ) {
 			cout << "* ";
 		}

@@ -6,6 +6,8 @@
 #include <cstdlib> // clrcsr
 #include <vector>
 #include "Page_Replacement_algorithms\helper.h"
+#include "Memory_Management\memoryalgorithm.h"
+
 using namespace std;
 
 CPU_Scheduling_algos algo;
@@ -14,7 +16,11 @@ vector<PCB> process_list;
 Page_replace_algo pg_replace;
 vector<int> reference_string;
 int no_of_frames;
-pair<vector<int>,int> input;
+pair<vector<int>, int> input;
+
+int numOfPart, numOfProc;
+pair<int, int> num;
+pair<Partition *, process *> list;
 
 int main()
 {
@@ -23,9 +29,9 @@ int main()
     do
     {
         cout << "1. CPU Scheduling Algorithms" << endl;
-cout << "2. Deadlock Algorithms" << endl;
+        cout << "2. Deadlock Algorithms" << endl;
         cout << "3. Process Synchronization Algorithms" << endl;
-                cout << "4. Page Replacement Algorithms" << endl;
+        cout << "4. Page Replacement Algorithms" << endl;
         cout << "5. Disk Scheduling Algorithms" << endl;
         cout << "6. Memory Management Algorithms" << endl;
         cout << "7. Exit" << endl;
@@ -185,10 +191,10 @@ cout << "2. Deadlock Algorithms" << endl;
             break;
         case 4:
             system("cls");
-            input = read_input_page_algo(reference_string,no_of_frames);
+            input = read_input_page_algo(reference_string, no_of_frames);
             system("cls");
             cout << "Select the Page Replacement Algorithm " << endl;
-            int pg_algo_choice;            
+            int pg_algo_choice;
             do
             {
                 cout << " 1. FIFO Page Replacement" << endl;
@@ -198,23 +204,21 @@ cout << "2. Deadlock Algorithms" << endl;
                 cout << " 5. Least Frequently Used (LFU)" << endl;
                 cout << " 6. Back" << endl;
                 cin >> pg_algo_choice;
-                switch(pg_algo_choice){
-                    case 1:
-                        pg_replace.FIFO(input.first,input.second);
+                switch (pg_algo_choice)
+                {
+                case 1:
+                    pg_replace.FIFO(input.first, input.second);
                     break;
-                    case 2:
-                        pg_replace.OPT(input.first,input.second);
+                case 2:
                     break;
-                    case 3:
-                        pg_replace.LRU(input.first,input.second);
+                case 3:
+                    pg_replace.LRU(input.first, input.second);
                     break;
-                    case 4:
-                        pg_replace.MFU(input.first,input.second);
+                case 4:
                     break;
-                    case 5:
-                        pg_replace.LFU(input.first,input.second);
+                case 5:
                     break;
-                    case 6:
+                case 6:
                     system("cls");
                     break;
                 }
@@ -223,6 +227,44 @@ cout << "2. Deadlock Algorithms" << endl;
         case 5:
             break;
         case 6:
+            system("cls");
+            num = read_num(numOfPart, numOfProc);
+            list = read_input_mem(num.first, num.second);
+            system("cls");
+            int mem_algo_choice;
+            cout<<"Select the algorihtm"<<endl;
+            do
+            {
+                cout << " 1. First Fit" << endl;
+                cout << " 2. Best Fit" << endl;
+                cout << " 3. Worst Fit" << endl;
+                cout << " 4. Back" << endl;
+                cin >> mem_algo_choice;
+                switch (mem_algo_choice)
+                {
+                case 1:
+                    cout << "                FIRST FIT ALGORITHM                  " << endl;
+                    cout << "-------------------------------------------------------" << endl;
+                    FirstFit(list.first, num.first, list.second, num.second);
+                    print_memory_results(list.first, num.first, list.second, num.second);
+                    break;
+                case 2:
+                    cout << "                BEST FIT ALGORITHM                  " << endl;
+                    cout << "-------------------------------------------------------" << endl;
+                    BestFit(list.first, num.first, list.second, num.second);
+                    print_memory_results(list.first, num.first, list.second, num.second);
+                    break;
+                case 3:
+                    cout << "                WORST FIT ALGORITHM                  " << endl;
+                    cout << "-------------------------------------------------------" << endl;
+                    WorstFit(list.first, num.first, list.second, num.second);
+                    print_memory_results(list.first, num.first, list.second, num.second);
+                    break;
+                case 4:
+                    system("cls");
+                    break;
+                }
+            } while (mem_algo_choice != 6);
             break;
         case 7:
             break;
