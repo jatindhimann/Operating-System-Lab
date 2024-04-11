@@ -1,6 +1,9 @@
+#pragma once
 #include <iostream>
 #include <cstdlib>
 #include <vector>
+#include <fstream>
+#include <limits.h>
 using namespace std;
 
 class Partition
@@ -34,11 +37,11 @@ public:
     }
 };
 
-void FirstFit(Partition *listPart, int numOfPart, process *listProc, int numOfProc)
+void FirstFit(vector<Partition> &listPart, vector<process> &listProc)
 {
-    for (int i = 0; i < numOfProc; i++)
+    for (int i = 0; i < listProc.size(); i++)
     {
-        for (int j = 0; j < numOfPart; j++)
+        for (int j = 0; j < listPart.size(); j++)
         {
             if (listProc[i].memory_required > listPart[j].size)
                 continue;
@@ -55,105 +58,131 @@ void FirstFit(Partition *listPart, int numOfPart, process *listProc, int numOfPr
     }
 }
 
-void BestFit(Partition *listPart, int numOfPart, process *listProc, int numOfProc)
+void BestFit(vector<Partition> &listPart, vector<process> &listProc)
 {
-    for (int i = 0; i < numOfProc; i++)
+    for (int i = 0; i < listProc.size(); i++)
     {
-        int *satisfyingList = new int[numOfPart];
-        vector<int> listKey;
-        int noOfSatisfy = 0;
-        for (int j = 0; j < numOfPart; j++)
+        vector<int> satisfying_part_idxs; // to store the idx of partitions that can fill the mem requirement of process, and
+                                          //  select the partition having min size from it
+        for (int j = 0; j < listPart.size(); j++)
         {
             if (listProc[i].memory_required > listPart[j].size)
                 continue;
             else
             {
-                satisfyingList[noOfSatisfy++] = listPart[j].id;
-                listKey.push_back(j);
+                satisfying_part_idxs.push_back(j); // storing
             }
         }
-        if (noOfSatisfy != 0)
+        if (!satisfying_part_idxs.empty()) // selecting
         {
-            int current = satisfyingList[0], key = listKey[0];
-            for (int j = 1; j < noOfSatisfy; j++)
+            int min = INT_MAX;
+            int min_idx = -1;
+            for (int j = 0; j < satisfying_part_idxs.size(); j++)
             {
-                if (listPart[listKey[j]].size < listPart[key].size)
+                if (listPart[satisfying_part_idxs[j]].size < min)
                 {
-                    key = listKey[j];
-                    current = satisfyingList[j];
+                    min = listPart[satisfying_part_idxs[j]].size;
+                    min_idx = satisfying_part_idxs[j];
                 }
             }
             listProc[i].allocated = true;
-            listProc[i].allocated_Partition = current;
-            listPart[key].alloted = true;
-            listPart[key].size -= listProc[i].memory_required;
-            listPart[key].noOfProc.push_back(listProc[i].id);
+            listProc[i].allocated_Partition = listPart[min_idx].id;
+            listPart[min_idx].alloted = true;
+            listPart[min_idx].size -= listProc[i].memory_required;
+            listPart[min_idx].noOfProc.push_back(listProc[i].id);
         }
     }
 }
-
-void WorstFit(Partition *listPart, int numOfPart, process *listProc, int numOfProc)
+// Algorithm Worst Fit
+void WorstFit(vector<Partition> &listPart, vector<process> &listProc)
 {
-    for (int i = 0; i < numOfProc; i++)
+    for (int i = 0; i < listProc.size(); i++)
     {
-        int maxFreePart = listPart[0].id, key = 0;
-        for (int j = 1; j < numOfPart; j++)
+        int maxFree_idx = 0;
+        for (int j = 1; j < listPart.size(); j++) // finding the index of partition having max size
         {
-            if (listPart[j].size > listPart[key].size)
+            if (listPart[j].size > listPart[maxFree_idx].size)
             {
-                maxFreePart = listPart[j].id;
-                key = j;
+                maxFree_idx = j;
             }
         }
-        if (listProc[i].memory_required > listPart[key].size)
+        if (listProc[i].memory_required > listPart[maxFree_idx].size)
             continue;
         else
         {
             listProc[i].allocated = true;
-            listProc[i].allocated_Partition = maxFreePart;
-            listPart[key].alloted = true;
-            listPart[key].size -= listProc[i].memory_required;
-            listPart[key].noOfProc.push_back(listProc[i].id);
+            listProc[i].allocated_Partition = listPart[maxFree_idx].id;
+            listPart[maxFree_idx].alloted = true;
+            listPart[maxFree_idx].size -= listProc[i].memory_required;
+            listPart[maxFree_idx].noOfProc.push_back(listProc[i].id);
         }
     }
 }
 
-pair<Partition *, process *> read_input_mem(int numOfPart, int numOfProc)
+void read_input_mem(vector<Partition> &listPart, vector<process> &listProc)
 {
-    // double timeUsed, timeUsed2, timeUsed3;
-    Partition *listPart = new Partition[numOfPart];
-    cout << "Enter the size of each Partition: ";
+    bool choice;
+    cout << "Do you want to enter new Partition details(0/1) ";
+    cin >> choice;
+    if (choice)
+    {
+        int numOfPart, numOfProc;
+        fstream outputFile("Memory_Management/Partition_details.txt", ios::out);
+        cout << "Enter the number of Partition: ";
+        cin >> numOfPart;
+        cout << "Enter the number of process: ";
+        cin >> numOfProc;
+        outputFile << numOfPart << " " << numOfProc << endl;
+        cout << "Enter the size of each Partition: " << endl;
+        for (int i = 0; i < numOfPart; i++)
+        {
+            int size;
+            cout << " Enter the size of Partition " << i + 1 << ": ";
+            cin >> size;
+            outputFile << size << " ";
+        }
+        outputFile << endl;
+
+        cout << "Enter memory required for each process: " << endl;
+        for (int i = 0; i < numOfProc; i++)
+        {
+            int memory;
+            cout << " Enter the memory requirement of process " << i + 1 << ": ";
+            cin >> memory;
+            outputFile << memory << " ";
+        }
+
+        outputFile.close();
+    }
+
+    fstream inputFile("Memory_Management/Partition_details.txt", ios::in);
+
+    int numOfPart, numOfProc;
+    inputFile >> numOfPart >> numOfProc;
+
+    listPart.resize(numOfPart);
+    listProc.resize(numOfProc);
+
     for (int i = 0; i < numOfPart; i++)
     {
+        inputFile >> listPart[i].size;
         listPart[i].id = i + 1;
-        cin >> listPart[i].size;
     }
-    process *listProc = new process[numOfProc];
-    cout << "Enter memory required for each process: ";
+
     for (int i = 0; i < numOfProc; i++)
     {
+        inputFile >> listProc[i].memory_required;
         listProc[i].id = i + 1;
-        cin >> listProc[i].memory_required;
     }
 
-    return {listPart, listProc};
+    inputFile.close();
 }
 
-pair<int, int> read_num(int numOfPart, int numOfProc)
-{
-    cout << "Enter the number of Partition: ";
-    cin >> numOfPart;
-    cout << "Enter the number of process: ";
-    cin >> numOfProc;
-
-    return {numOfPart, numOfProc};
-}
-
-void print_memory_results(Partition *listPart, int numOfPart, process *listProc, int numOfProc)
+void print_memory_results(vector<Partition> &listPart, vector<process> &listProc)
 {
     cout << endl
          << "ProcID\tMemRequired\tAllocated\tAllocatedPartID" << endl;
-    for (int i = 0; i < numOfProc; i++)
+    for (int i = 0; i < listProc.size(); i++)
     {
         cout << listProc[i].id << "\t" << listProc[i].memory_required << "\t\t";
         if (listProc[i].allocated)
@@ -172,7 +201,7 @@ void print_memory_results(Partition *listPart, int numOfPart, process *listProc,
          << endl;
     cout << endl
          << "PartID\tAlloted\t\tInterFrag\tProcIDInPart" << endl;
-    for (int i = 0; i < numOfPart; i++)
+    for (int i = 0; i < listPart.size(); i++)
     {
         cout << listPart[i].id << "\t";
         if (listPart[i].alloted)

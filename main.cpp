@@ -7,7 +7,6 @@
 #include <vector>
 #include "Page_Replacement_algorithms\helper.h"
 #include "Memory_Management\memoryalgorithm.h"
-
 using namespace std;
 
 CPU_Scheduling_algos algo;
@@ -18,9 +17,9 @@ vector<int> reference_string;
 int no_of_frames;
 pair<vector<int>, int> input;
 
-int numOfPart, numOfProc;
-pair<int, int> num;
-pair<Partition *, process *> list;
+
+vector<Partition> listPart;
+vector<process> listProc;
 
 int main()
 {
@@ -228,13 +227,11 @@ int main()
             break;
         case 6:
             system("cls");
-            num = read_num(numOfPart, numOfProc);
-            list = read_input_mem(num.first, num.second);
+            read_input_mem(listPart,listProc);
             system("cls");
             int mem_algo_choice;
-            cout<<"Select the algorihtm"<<endl;
-            do
-            {
+            cout << "Select the algorihtm" << endl;
+            
                 cout << " 1. First Fit" << endl;
                 cout << " 2. Best Fit" << endl;
                 cout << " 3. Worst Fit" << endl;
@@ -245,26 +242,25 @@ int main()
                 case 1:
                     cout << "                FIRST FIT ALGORITHM                  " << endl;
                     cout << "-------------------------------------------------------" << endl;
-                    FirstFit(list.first, num.first, list.second, num.second);
-                    print_memory_results(list.first, num.first, list.second, num.second);
+                    FirstFit(listPart,listProc);
+                    print_memory_results(listPart,listProc);
                     break;
                 case 2:
                     cout << "                BEST FIT ALGORITHM                  " << endl;
                     cout << "-------------------------------------------------------" << endl;
-                    BestFit(list.first, num.first, list.second, num.second);
-                    print_memory_results(list.first, num.first, list.second, num.second);
+                    BestFit(listPart,listProc);
+                    print_memory_results(listPart,listProc);
                     break;
                 case 3:
                     cout << "                WORST FIT ALGORITHM                  " << endl;
                     cout << "-------------------------------------------------------" << endl;
-                    WorstFit(list.first, num.first, list.second, num.second);
-                    print_memory_results(list.first, num.first, list.second, num.second);
+                    WorstFit(listPart,listProc);
+                    print_memory_results(listPart,listProc);
                     break;
                 case 4:
                     system("cls");
                     break;
                 }
-            } while (mem_algo_choice != 6);
             break;
         case 7:
             break;
