@@ -48,17 +48,6 @@ pair<vector<int>,int > read_input_page_algo(vector<int> &reference_string, int n
 
     return {reference_string,no_of_frames};
 }
-
-void print(vector<int> &arr)
-{
-
-    cout << endl;
-    for (int i = 0; i < arr.size(); i++)
-    {
-        cout << arr[i] << " ";
-    }
-    cout << endl;
-}
 int maxValueIndex(vector<int> &v) {
 	
 	int max_val = INT_MIN;

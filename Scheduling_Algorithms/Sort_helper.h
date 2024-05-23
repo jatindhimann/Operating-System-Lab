@@ -48,6 +48,3 @@ void sort_priority(deque<PCB> &process_list, int &time)
         } });
 }
 
-void sort_rr(deque<PCB> &process_list, int &time)
-{
-}

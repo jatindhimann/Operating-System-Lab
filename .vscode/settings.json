@@ -3,6 +3,9 @@
         "iostream": "cpp",
         "utility": "cpp",
         "vector": "cpp",
-        "iosfwd": "cpp"
+        "iosfwd": "cpp",
+        "algorithm": "cpp",
+        "thread": "cpp",
+        "xlocale": "cpp"
     }
 }
