@@ -29,15 +29,37 @@
 <ul>
    <li>Banker's Algorithm
     <ul>
-        <li>SAfety Algorithm</li>
+        <li>Safety Algorithm</li>
         <li>Request and resource Allocation</li>
     </ul></li>
 </ul>
-<h2>CPU Scheduling Algorithms</h2>
+<h2>Page Replacement Algorithms</h2>
 <ul>
-    <li>CPU Scheduling algorithms</li>
-    <li>Deadlock algorithms</li>
-    <li>Page Replacement algorithms</li>
-    <li>DISK Scheduling algorithms</li>
-    <li>Memory Management algorithms</li>
+    <li>First in First Out</li>
+    <li>Optimal Page Replacement</li>
+    <li>Least Recently Used</li>
+    <li>Most Frequently Used</li>
+    <li>Least Frequently Used</li>
+</ul>
+<h2>Disk Scheduling Algorithms</h2>
+<ul>
+    <li>First Come First Serve</li>
+    <li>Shortest Seek Time First</li>
+    <li>SCAN</li>
+    <li>C-SCAN</li>
+    <li>LOOK</li>
+    <li>C-LOOK</li>
+</ul>
+<h2>Memory Management Algorithms</h2>
+<ul>
+    <li>First Fit</li>
+    <li>Best Fit</li>
+    <li>Worst Fit</li>
+</ul>
+<h2>Getting Started</h2>
+<p>To compile and run this project, you need</p>
+<ul>
+    <li>A C++ compiler (GCC, Clang, MSVC, etc.)
+</li>
+    <li>Standard Template Library (STL) support</li>
 </ul>
